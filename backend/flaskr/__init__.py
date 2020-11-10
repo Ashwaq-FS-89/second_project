@@ -142,14 +142,17 @@ def create_app(test_config=None):
     previous_questions= data['previous_questions']
     category= data['quiz_category']
 
-    question=Question.query.filter(Question.category==category).all()
+    question=Question.query.filter(Question.category==category.id).all()
+    
+    for i in question:
+      new_question=i[random.randrange(0,len(question),1)]
+    
 
-    new_question=random.choice(question)
 
     return jsonify({
           'success': True,
           'previousQuestions':previous_questions,
-          'currentQuestion':new_question
+          'currentQuestion':new_question.format()
         })
 
  
