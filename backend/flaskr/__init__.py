@@ -49,7 +49,7 @@ def create_app(test_config=None):
     print(data)
     return jsonify({
           'success': True,
-          'questions':new_question
+          'questions':new_question.id
         })
 
       
@@ -93,7 +93,7 @@ def create_app(test_config=None):
 
     return jsonify({
     'success': True,
-    'delated':id
+    'delated':question.id
         })
 
   @app.route('/questions/search', methods=['POST'])
@@ -136,23 +136,29 @@ def create_app(test_config=None):
           'current_category':category_id
         })
 
-  @app.route('/quizzes', methods=['POST'])
+  @app.route('/quizzes',methods=['POST'])
   def play_quizzes(): 
     data=request.get_json()
     previous_questions= data['previous_questions']
     category= data['quiz_category']
-
-    question=Question.query.filter(Question.category==category.id).all()
     
-    for i in question:
-      new_question=i[random.randrange(0,len(question),1)]
+
+    question=Question.query.filter_by(category=category['id']).all()
+    print(question)
+    new_question=question[random.randrange(0,len(question),1)]
+
+  
+    if new_question in previous_questions:
+       new_question=question[random.randrange(0,len(question),1)]
+    print(new_question)
+     
+
     
 
 
     return jsonify({
-          'success': True,
-          'previousQuestions':previous_questions,
-          'currentQuestion':new_question.format()
+      'success': True,
+      'currentQuestion':new_question.format()
         })
 
  

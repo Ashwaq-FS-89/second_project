@@ -80,13 +80,15 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Method Not Allowed')
 
-    def test_delete_question(self):
-        res = self.client().delete('/questions/1')
-        data = json.loads(res.data)
+    # def test_delete_question(self):
+    #     res = self.client().delete('/questions/1')
+    #     data = json.loads(res.data)
+    #     question = Question.query.get(1)
 
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
-        self.assertEqual(data['deleted'], 1)
+    #     self.assertEqual(res.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertEqual(data['deleted'], 1)
+    #     self.assertEqual(question, None)
 
     def test_get_questions_by_categories(self):
         res = self.client().get('/categories/3/questions')
@@ -97,13 +99,25 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(len(data['questions']))
 
-    def test_search_question(self):
+    def test_search_question_with_result(self):
         search_term =  {'searchTerm':'name'}
         res = self.client().post('/questions/search', json=search_term)
         data = json.loads(res.data)
         
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
+        self.assertTrue(data['totalQuestions'])
+        self.assertEqual(len(data['questions']),2)
+
+    def test_search_question_without_result(self):
+        search_term =  {'searchTerm':'almuteri'}
+        res = self.client().post('/questions/search', json=search_term)
+        data = json.loads(res.data)
+        
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['totalQuestions'],0)
+        self.assertEqual(len(data['questions']),0)
         
         
 
