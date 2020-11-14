@@ -68,8 +68,8 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_new_question_fail(self):
         new_question = {
-            'question':'what is faviorate subjuct',
-            'answer': 'cumputer',
+            'question':'',
+            'answer': '',
             'difficulty':2 ,
             'category':1 
             }
@@ -118,11 +118,23 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertEqual(data['totalQuestions'],0)
         self.assertEqual(len(data['questions']),0)
+
+    def test_play_quezzies(self):
+        requst_data={
+            "previous_questions":[],
+            "quiz_category":{"type":"Science","id":3}}
+        res = self.client().post('/quizzes', json=requst_data)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['question'])
+        self.assertTrue(len(data['question']))
+
+    
+
+
         
-        
-
-
-
 
 if __name__ == "__main__":
     unittest.main()

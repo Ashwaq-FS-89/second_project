@@ -28,7 +28,6 @@ def create_app(test_config=None):
     category=Category.query.all()
     data={}
     for i in category:
-      print(i)
       data[i.id]=i.type
     
     return jsonify({
@@ -141,24 +140,22 @@ def create_app(test_config=None):
     data=request.get_json()
     previous_questions= data['previous_questions']
     category= data['quiz_category']
+    category_id= int(category['id'])
+    print(category)
+
+    if category_id == 0: 
+      question=Question.query.all()
+
+    else:
+       question=Question.query.filter(Question.category==category_id).filter(\
+         Question.id.notin_(previous_questions)).all()
+       
+    new_question=random.choice(question)
+    print(new_question.format())
     
-
-    question=Question.query.filter_by(category=category['id']).all()
-    print(question)
-    new_question=question[random.randrange(0,len(question),1)]
-
-  
-    if new_question in previous_questions:
-       new_question=question[random.randrange(0,len(question),1)]
-    print(new_question)
-     
-
-    
-
-
     return jsonify({
       'success': True,
-      'currentQuestion':new_question.format()
+      'question':new_question.format()
         })
 
  
