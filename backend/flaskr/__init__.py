@@ -66,7 +66,6 @@ def create_app(test_config=None):
     
 
     qustion_paginate= data[offset:end]
-    print(data)
 
     category=Category.query.all()
     data1={}
@@ -78,9 +77,7 @@ def create_app(test_config=None):
           'success': True,
           'questions': qustion_paginate,
           'totalQuestions':len(questions),
-          'categories': data1,
-          'currentCategory': None
-           
+          'categories': data1
         })
 
       
@@ -111,9 +108,7 @@ def create_app(test_config=None):
             'success': True,
             'questions': qustion_paginate,
             'totalQuestions':len(result),
-            'currentCategory':None
-            
-          })
+             })
     
  
 
