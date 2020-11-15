@@ -2,8 +2,8 @@
 __pycache__
 venv
 
-/env
-/frontend/node_modules
+# /env
+# /frontend/node_modules
 
 .DS_Store
 .DS_Store?

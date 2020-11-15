@@ -119,6 +119,15 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['totalQuestions'],0)
         self.assertEqual(len(data['questions']),0)
 
+    def test_search_question_fail(self):
+        search_term =  {}
+        res = self.client().post('/questions/search', json=search_term)
+        data = json.loads(res.data)
+        
+        self.assertEqual(res.status_code, 400)
+        self.assertFalse(data['success'])
+        self.assertEqual(data['message'], 'Bad Request')
+
     def test_play_quezzies(self):
         requst_data={
             "previous_questions":[],
@@ -130,6 +139,19 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(data['question'])
         self.assertTrue(len(data['question']))
+
+    def test_play_quezzies_fail(self):
+        requst_data={
+             "previous_questions":[]}
+            
+        res = self.client().post('/quizzes', json=requst_data)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertFalse(data['success'])
+        self.assertEqual(data['message'], 'unprocessable')
+
+    
 
     
 

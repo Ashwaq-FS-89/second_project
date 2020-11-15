@@ -25,10 +25,10 @@ def create_app(test_config=None):
   
   @app.route('/categories')
   def get_categories():
-    category=Category.query.all()
+    categories=Category.query.all()
     data={}
-    for i in category:
-      data[i.id]=i.type
+    for category in categories:
+      data[category.id]=category.type
     
     return jsonify({
           'success': True,
@@ -146,7 +146,7 @@ def create_app(test_config=None):
          Question.id.notin_(previous_questions)).all()
 
 
-    if (len(question==0)):
+    if len(question)==0:
       return jsonify({
       'success': True,
         })
