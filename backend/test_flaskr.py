@@ -80,15 +80,15 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Method Not Allowed')
 
-    # def test_delete_question(self):
-    #     res = self.client().delete('/questions/1')
-    #     data = json.loads(res.data)
-    #     question = Question.query.get(1)
+    def test_delete_question(self):
+        res = self.client().delete('/questions/10')
+        data = json.loads(res.data)
+        question = Question.query.filter(Question.id == 10).one_or_none()
 
-    #     self.assertEqual(res.status_code, 200)
-    #     self.assertEqual(data['success'], True)
-    #     self.assertEqual(data['deleted'], 1)
-    #     self.assertEqual(question, None)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['delated'], 10)
+        self.assertEqual(question, None)
 
     def test_get_questions_by_categories(self):
         res = self.client().get('/categories/3/questions')
@@ -115,7 +115,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['totalQuestions'])
-        self.assertEqual(len(data['questions']),2)
+        self.assertEqual(len(data['questions']),1)
 
     def test_search_question_without_result(self):
         search_term =  {'searchTerm':'almuteri'}
@@ -127,14 +127,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['totalQuestions'],0)
         self.assertEqual(len(data['questions']),0)
 
-    def test_search_question_fail(self):
-        search_term =  {}
-        res = self.client().post('/questions/search', json=search_term)
-        data = json.loads(res.data)
-        
-        self.assertEqual(res.status_code, 400)
-        self.assertFalse(data['success'])
-        self.assertEqual(data['message'], 'Bad Request')
+    
 
     def test_play_quezzies(self):
         requst_data={
@@ -150,15 +143,16 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_play_quezzies_fail(self):
         requst_data={
-             "previous_questions":[]}
+            "previous_questions":[],
+            "quiz_category":{"type":"Science","id":3}}
+
             
-        res = self.client().post('/quizzes', json=requst_data)
+        res = self.client().post('/quizzes/2',json=requst_data)
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 422)
-        self.assertFalse(data['success'])
-        self.assertEqual(data['message'], 'unprocessable')
-
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'],False)
+        self.assertEqual(data['message'],'Resource Not found')
     
 
     
