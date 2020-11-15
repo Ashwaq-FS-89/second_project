@@ -144,9 +144,14 @@ def create_app(test_config=None):
     else:
        question=Question.query.filter(Question.category==category_id).filter(\
          Question.id.notin_(previous_questions)).all()
-       
+
+
+    if (len(question==0)):
+      return jsonify({
+      'success': True,
+        })
+   
     new_question=random.choice(question)
-    print(new_question.format())
     
     return jsonify({
       'success': True,
