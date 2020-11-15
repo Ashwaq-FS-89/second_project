@@ -99,6 +99,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(len(data['questions']))
 
+    def test_fail_get_questions_by_categories(self):
+        res = self.client().get('/categories/id/questions')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertFalse(data['success'])
+        self.assertEqual(data['message'], 'Resource Not found')
+
     def test_search_question_with_result(self):
         search_term =  {'searchTerm':'name'}
         res = self.client().post('/questions/search', json=search_term)
